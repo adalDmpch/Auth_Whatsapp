@@ -1,5 +1,5 @@
 import base64 from 'base-64';
-import { TWILIO_CONFIG } from '../constants/twilioconfig';
+import { TWILIO_CONFIG } from '../constants/TwilioConfig';
 
 export const sendMessage = async (toNumber, message) => {
     try {
@@ -17,32 +17,32 @@ export const sendMessage = async (toNumber, message) => {
         const url = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_CONFIG.accountSid}/Messages.json`;
 
         const formData = new URLSearchParams({
-            To: whatsapp: ${ toNumber },
-            From: whatsapp: ${ TWILIO_CONFIG.twilioNumber },
+            To: `whatsapp:${toNumber}`,
+            From: `whatsapp:${TWILIO_CONFIG.twilioNumber}`,
             Body: message,
-        }).toString();
+        }).toString();
 
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            Authorization: `Basic ${auth}`,
-        },
-        body: formData,
-    });
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                Authorization: `Basic ${auth}`,
+            },
+            body: formData,
+        });
 
-    const result = await response.json();
-    console.log('Respuesta de Twilio:', result);
+        const result = await response.json();
+        console.log('Respuesta de Twilio:', result);
 
-    if (!response.ok) {
-        return {
-            error: result.message || result.error_message || 'Error en el envío del mensaje',
-        };
+        if (!response.ok) {
+            return {
+                error: result.message || result.error_message || 'Error en el envío del mensaje',
+            };
+        }
+
+        return result;
+    } catch (error) {
+        console.error('Error en el envío:', error);
+        return { error: 'Error en la conexión con el servicio de mensajería' };
     }
-
-    return result;
-} catch (error) {
-    console.error('Error en el envío:', error);
-    return { error: 'Error en la conexión con el servicio de mensajería' };
-}
 };

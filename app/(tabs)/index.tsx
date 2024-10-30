@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ActivityIndicator, Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-
+import { sendMessage } from '../../scripts/twilioAuth';
 
 // Función para generar un código de verificación aleatorio de 6 dígitos
 const generateVerificationCode = () => {
