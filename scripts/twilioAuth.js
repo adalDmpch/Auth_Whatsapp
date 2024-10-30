@@ -16,29 +16,33 @@ export const sendMessage = async (toNumber, message) => {
         const auth = base64.encode(`${TWILIO_CONFIG.accountSid}:${TWILIO_CONFIG.authToken}`);
         const url = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_CONFIG.accountSid}/Messages.json`;
 
+        const formData = new URLSearchParams({
+            To: whatsapp: ${ toNumber },
+            From: whatsapp: ${ TWILIO_CONFIG.twilioNumber },
+            Body: message,
+        }).toString();
 
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Authorization: `Basic ${auth}`,
+        },
+        body: formData,
+    });
 
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                Authorization: `Basic ${auth}`,
-            },
-            body: formData,
-        });
+    const result = await response.json();
+    console.log('Respuesta de Twilio:', result);
 
-        const result = await response.json();
-        console.log('Respuesta de Twilio:', result);
-
-        if (!response.ok) {
-            return {
-                error: result.message || result.error_message || 'Error en el envío del mensaje',
-            };
-        }
-
-        return result;
-    } catch (error) {
-        console.error('Error en el envío:', error);
-        return { error: 'Error en la conexión con el servicio de mensajería' };
+    if (!response.ok) {
+        return {
+            error: result.message || result.error_message || 'Error en el envío del mensaje',
+        };
     }
+
+    return result;
+} catch (error) {
+    console.error('Error en el envío:', error);
+    return { error: 'Error en la conexión con el servicio de mensajería' };
+}
 };
