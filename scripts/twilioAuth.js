@@ -16,6 +16,12 @@ export const sendMessage = async (toNumber, message) => {
         const auth = base64.encode(`${TWILIO_CONFIG.accountSid}:${TWILIO_CONFIG.authToken}`);
         const url = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_CONFIG.accountSid}/Messages.json`;
 
+        const formData = new URLSearchParams({
+            To: whatsapp:${toNumber},
+            From: whatsapp:${TWILIO_CONFIG.twilioNumber},
+            Body: message,
+        }).toString();
+
         const response = await fetch(url, {
             method: 'POST',
             headers: {
