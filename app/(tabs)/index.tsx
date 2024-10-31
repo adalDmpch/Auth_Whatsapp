@@ -48,3 +48,34 @@ export default function AuthScreen() {
     }
   };
 
+ // Verificar el código ingresado
+ const handleVerifyCode = () => {
+  if (verificationCode === generatedCode) {
+    Alert.alert('Éxito', 'Sesión iniciada correctamente');
+    setIsAuthenticated(true); // Usuario autenticado
+  } else {
+    Alert.alert('Error', 'Código incorrecto. Intenta de nuevo.');
+  }
+};
+
+// Volver al inicio para intentar con otro número o código
+const handleReset = () => {
+  setPhoneNumber('');
+  setVerificationCode('');
+  setGeneratedCode('');
+  setCodeSent(false);
+  setIsAuthenticated(false);
+};
+
+
+if (isAuthenticated) {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.successText}>¡Bienvenido! Haz Iniciado Sesion.</Text>
+      <TouchableOpacity style={styles.button} onPress={handleReset}>
+        <Text style={styles.buttonText}>Cerrar Sesión</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
